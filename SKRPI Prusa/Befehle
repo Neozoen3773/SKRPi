@@ -1,0 +1,36 @@
+cp /tmp/calibration_data_*.csv /home/pi/klipper_config/calibration_data_x_*.png
+cp /tmp/calibration_data_*.csv /home/pi/klipper_config/
+cp /tmp/calibration_data_*.png /home/pi/klipper_config/
+~/klipper/scripts/calibrate_shaper.py /tmp/calibration_data_x*.csv -o /tmp/shaper_auto_calibrate_x.png
+
+cp out/klipper.bin ../klipper_config/firmware.bin
+
+./kiauh/kiauh.sh
+
+make menuconfig
+make clean
+make
+cp out/klipper.elf.hex ../klipper_config/klipper.elf.hex
+
+cd klipper
+avrdude -patmega328p -c arduino  -b 57600 -P /dev/ttyUSB0 -v  -D -Uflash:w:out/klipper.elf.hex:i
+
+ls /dev/serial/by-id/*
+
+Flashing out/klipper.elf.hex to /dev/serial/by-id/usb-1a86_USB_Serial-if00-port0 via avrdude
+avrdude: stk500_getsync() attempt 1 of 10: not in sync: resp=0x00
+avrdude: stk500_getsync() attempt 2 of 10: not in sync: resp=0x00
+avrdude: stk500_getsync() attempt 3 of 10: not in sync: resp=0x00
+avrdude: stk500_getsync() attempt 4 of 10: not in sync: resp=0x00
+avrdude: stk500_getsync() attempt 5 of 10: not in sync: resp=0x00
+avrdude: stk500_getsync() attempt 6 of 10: not in sync: resp=0x00
+avrdude: stk500_getsync() attempt 7 of 10: not in sync: resp=0x00
+avrdude: stk500_getsync() attempt 8 of 10: not in sync: resp=0x00
+avrdude: stk500_getsync() attempt 9 of 10: not in sync: resp=0x00
+avrdude: stk500_getsync() attempt 10 of 10: not in sync: resp=0x00
+
+avrdude done.  Thank you.
+
+make: *** [src/avr/Makefile:34: flash] Error 1
+<!!!!> Flashing failed!
+<!!!!> Please read the console output above!
